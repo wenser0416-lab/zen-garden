@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>枯山水小庭</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:rgba(247,243,234,.9);--ink:#2b2824;--sumi:#4a443c;--shu:#a33f2c;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:#dde4e2;font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;color:var(--ink);user-select:none;-webkit-user-select:none}
+canvas#c{display:block;position:fixed;inset:0;width:100vw;height:100vh;touch-action:none}
+#title{position:fixed;top:14px;left:16px;display:flex;align-items:center;gap:10px;pointer-events:none}
+#title .seal{width:30px;height:30px;border:1.5px solid var(--shu);color:var(--shu);display:grid;place-items:center;font-size:16px;border-radius:3px;transform:rotate(-3deg);background:rgba(255,255,255,.35)}
+#title span{font-size:15px;letter-spacing:.3em;color:var(--sumi);text-shadow:0 1px 0 rgba(255,255,255,.6)}
+#helpBtn{position:fixed;top:12px;right:14px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:16px;color:var(--sumi);cursor:pointer}
+#soundBtn{position:fixed;top:12px;right:58px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:15px;color:var(--sumi);cursor:pointer;padding:0}
+#soundBtn.off{color:rgba(74,68,60,.4);text-decoration:line-through}
+#actions{position:fixed;right:16px;bottom:22px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.btn{width:66px;height:66px;border-radius:50%;border:1px solid rgba(60,55,48,.28);background:var(--paper);font:inherit;font-size:15px;letter-spacing:.1em;color:var(--ink);cursor:pointer;box-shadow:0 3px 10px rgba(40,35,30,.12);transition:transform .15s,background .2s,color .2s}
+.btn:active{transform:scale(.93)}
+.btn.small{width:50px;height:50px;font-size:12px;color:var(--sumi)}
+.btn.on{background:#3c3731;color:#f3ede0;border-color:#3c3731}
+.btn.ctx{width:74px;height:74px;font-size:15px;border:1.5px solid var(--shu);color:var(--shu)}
+.hidden{display:none!important}
+#joy{position:fixed;left:34px;bottom:34px;width:120px;height:120px;border-radius:50%;border:1.5px dashed rgba(60,55,48,.28);background:rgba(255,255,255,.12);pointer-events:none;opacity:.7;transition:opacity .2s}
+#joy.active{opacity:1;border-style:solid;background:rgba(255,255,255,.22)}
+#knob{position:absolute;left:50%;top:50%;width:50px;height:50px;margin:-25px 0 0 -25px;border-radius:50%;background:var(--paper);border:1px solid rgba(60,55,48,.3);box-shadow:0 2px 6px rgba(0,0,0,.1)}
+#toast{position:fixed;z-index:9;left:50%;bottom:30px;transform:translateX(-50%) translateY(10px);background:rgba(43,40,36,.82);color:#f4efe4;padding:9px 18px;border-radius:20px;font-size:14px;letter-spacing:.08em;opacity:0;transition:opacity .4s,transform .4s;pointer-events:none;white-space:nowrap;max-width:80vw;overflow:hidden;text-overflow:ellipsis}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#poem{position:fixed;top:16%;left:12%;writing-mode:vertical-rl;font-size:22px;letter-spacing:.45em;color:#2f2b26;text-shadow:0 0 12px rgba(255,255,255,.9),0 0 3px rgba(255,255,255,.9);opacity:0;transition:opacity 2s;pointer-events:none}
+#poem.show{opacity:1}
+#intro{position:fixed;inset:0;display:grid;place-items:center;background:rgba(221,228,226,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:10;transition:opacity .6s}
+#intro.fade{opacity:0;pointer-events:none}
+.card{width:min(360px,86vw);background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:6px;padding:28px 26px 24px;text-align:center;box-shadow:0 10px 40px rgba(40,35,30,.18);position:relative}
+.card .seal{position:absolute;top:16px;right:18px;width:34px;height:34px;border:1.5px solid var(--shu);color:var(--shu);display:grid;place-items:center;border-radius:3px;transform:rotate(4deg);font-size:18px}
+.card h1{margin:4px 0 14px;font-weight:600;font-size:24px;letter-spacing:.35em}
+.card .lead{margin:0 0 18px;line-height:1.9;color:var(--sumi);font-size:15px}
+.card .how{margin:0 0 22px;padding:12px 10px;border-top:1px dashed rgba(60,55,48,.25);border-bottom:1px dashed rgba(60,55,48,.25);list-style:none;font-size:13px;line-height:2;color:#5c554b}
+#startBtn{font:inherit;font-size:16px;letter-spacing:.3em;padding:11px 28px 11px 34px;border-radius:24px;border:none;background:#3c3731;color:#f3ede0;cursor:pointer}
+#seasons{position:fixed;top:54px;left:16px;display:flex;gap:6px}
+#seasons button{width:34px;height:34px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:15px;color:var(--sumi);cursor:pointer;padding:0;transition:background .2s,color .2s}
+#seasons button.on{background:#3c3731;color:#f3ede0;border-color:#3c3731}
+#seasonCard{position:fixed;top:100px;left:50%;transform:translateX(-50%) translateY(-6px);width:min(340px,84vw);background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:6px;padding:12px 16px;text-align:center;box-shadow:0 6px 24px rgba(40,35,30,.14);opacity:0;transition:opacity .5s,transform .5s;pointer-events:none}
+#seasonCard.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#seasonCard b{display:block;font-weight:600;font-size:16px;letter-spacing:.25em;margin-bottom:6px}
+#seasonCard span{font-size:13px;line-height:1.8;color:#5c554b}
+#seasons .sep{width:6px}
+#timeBtn{border-style:dashed!important}
+#sitPanel{position:fixed;left:16px;bottom:24px;max-width:calc(100vw - 112px);z-index:3}
+#sitPanel .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#sitPanel button{height:40px;padding:0 15px;border-radius:20px;border:1px solid rgba(60,55,48,.28);background:var(--paper);font:inherit;font-size:14px;letter-spacing:.08em;color:var(--ink);cursor:pointer;box-shadow:0 2px 8px rgba(40,35,30,.1)}
+#sitPanel .lbl{font-size:13px;color:var(--sumi);letter-spacing:.2em;background:var(--paper);padding:5px 10px;border-radius:12px;margin-right:2px}
+#sitInfo{font-size:15px;letter-spacing:.15em;color:#3a352f;background:var(--paper);padding:8px 14px;border-radius:20px}
+#sitInfo:empty{display:none}
+#breathDot{position:fixed;left:50%;bottom:34px;width:64px;height:64px;margin-left:0;border-radius:50%;background:radial-gradient(circle,rgba(255,226,170,.95) 0%,rgba(255,200,120,.5) 45%,rgba(255,190,110,0) 72%);transform:translateX(-50%) scale(.6);opacity:0;pointer-events:none;transition:opacity .6s}
+#breathDot:not(.show){opacity:0!important}
+#listenOverlay{position:fixed;inset:0;background:rgba(22,20,17,.62);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;opacity:0;pointer-events:none;transition:opacity 1.2s;z-index:6;padding:0 28px;text-align:center}
+#listenOverlay.show{opacity:1;pointer-events:auto}
+#listenText{color:#f1ece1;font-size:19px;line-height:2;letter-spacing:.18em;margin:0}
+#listenText b{font-weight:400;color:#ffe2b0;font-size:17px;letter-spacing:.12em}
+#listenBack{font:inherit;font-size:14px;letter-spacing:.2em;padding:9px 22px;border-radius:20px;border:1px solid rgba(241,236,225,.4);background:transparent;color:#f1ece1;cursor:pointer}
+body.night #poem{color:#efe9dc;text-shadow:0 0 10px rgba(0,0,0,.85),0 0 3px rgba(0,0,0,.9)}
+body.night #title span{color:#d8d2c5;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+#visitNote{position:fixed;top:56px;right:16px;font-size:12px;letter-spacing:.2em;color:rgba(60,55,48,.55);pointer-events:none;text-shadow:0 0 4px rgba(255,255,255,.8)}
+body.night #visitNote{color:rgba(230,225,214,.6);text-shadow:none}
+#editBar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);width:min(560px,calc(100vw - 20px));display:flex;flex-direction:column;gap:8px;background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:14px;padding:10px;box-shadow:0 6px 24px rgba(40,35,30,.16);z-index:4}
+#editBar .row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+#editBar button{height:36px;padding:0 12px;border-radius:18px;border:1px solid rgba(60,55,48,.25);background:#fff;font:inherit;font-size:13px;color:var(--ink);cursor:pointer}
+#editBar button:disabled{opacity:.35}
+#editDone{background:#3c3731!important;color:#f3ede0!important;border-color:#3c3731!important}
+body.editing #actions,body.editing #joy,body.editing #sitPanel,body.editing #seasons{display:none!important}
+body.editing #editBar{display:flex!important}
+#leafModal{position:fixed;inset:0;display:grid;place-items:center;background:rgba(30,27,23,.35);z-index:8}
+.mcard{width:min(320px,86vw);background:var(--paper);border-radius:10px;padding:22px 20px 18px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.mcard p{margin:0 0 14px;letter-spacing:.2em;color:var(--sumi)}
+#leafInput{width:100%;font:inherit;font-size:20px;text-align:center;letter-spacing:.2em;padding:10px;border:none;border-bottom:1.5px solid rgba(60,55,48,.35);background:transparent;outline:none;color:var(--ink)}
+.mbtns{display:flex;gap:10px;justify-content:center;margin-top:18px}
+.mbtns button{font:inherit;font-size:14px;letter-spacing:.2em;padding:8px 20px;border-radius:18px;border:1px solid rgba(60,55,48,.3);background:#fff;cursor:pointer}
+#leafOk{background:#3c3731;color:#f3ede0;border-color:#3c3731}
+#askCard{position:fixed;left:50%;bottom:120px;transform:translateX(-50%) translateY(10px);width:min(340px,84vw);background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:8px;padding:16px 18px 14px;text-align:center;box-shadow:0 8px 28px rgba(40,35,30,.18);opacity:0;pointer-events:none;transition:opacity .8s,transform .8s;z-index:4}
+#askCard.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+#askCard small{display:block;font-size:11px;letter-spacing:.3em;color:#8a8175;margin-bottom:8px}
+#askCard p{margin:0 0 12px;font-size:17px;line-height:1.8;letter-spacing:.08em;color:var(--ink)}
+#askOk{font:inherit;font-size:13px;letter-spacing:.3em;padding:6px 18px;border-radius:16px;border:1px solid rgba(60,55,48,.3);background:transparent;cursor:pointer;color:var(--sumi)}
+#soundPanel{position:fixed;top:56px;right:14px;width:240px;background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:10px;padding:12px 14px;box-shadow:0 8px 26px rgba(40,35,30,.18);z-index:7;display:flex;flex-direction:column;gap:10px}
+#soundPanel.hidden{display:none}
+.sp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;letter-spacing:.15em;color:var(--sumi)}
+.sp-row input[type=range]{flex:1;accent-color:#5a5248}
+.sw{font:inherit;font-size:13px;padding:4px 14px;border-radius:14px;border:1px solid rgba(60,55,48,.3);background:#fff;color:var(--sumi);cursor:pointer}
+.sw.on{background:#3c3731;color:#f3ede0;border-color:#3c3731}
+#sleepBtn{font:inherit;font-size:12px;letter-spacing:.1em;padding:8px 10px;border-radius:16px;border:1px dashed rgba(60,55,48,.35);background:transparent;color:var(--sumi);cursor:pointer}
+#sleepBtn.on{border-style:solid;background:#2f3440;color:#e9e6dd}
+#sleepOverlay{position:fixed;inset:0;background:#060505;opacity:0;pointer-events:none;transition:opacity 90s ease-in;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#8f877a;letter-spacing:.4em}
+#sleepOverlay.show{opacity:.97;pointer-events:auto}
+#sleepOverlay p{margin:0;font-size:20px}
+#sleepOverlay small{font-size:12px;letter-spacing:.25em;color:#5c564d}
+#visitNote{transition:opacity .3s}
+body:has(#soundPanel:not(.hidden)) #visitNote{opacity:0}
+#bookBtn{position:fixed;top:12px;right:102px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:15px;color:var(--sumi);cursor:pointer;padding:0}
+#bookDot{position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--shu);display:none}
+#bookDot.on{display:block}
+#teaHint{position:fixed;left:50%;top:22%;transform:translateX(-50%);padding:9px 18px;border-radius:20px;background:rgba(247,243,234,.88);font-size:14px;letter-spacing:.12em;color:var(--sumi);opacity:0;transition:opacity .8s;pointer-events:none;white-space:nowrap;max-width:90vw}
+#teaHint.show{opacity:1}
+#teaDrink{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);font:inherit;font-size:16px;letter-spacing:.3em;padding:12px 28px 12px 32px;border-radius:24px;border:none;background:#3c3731;color:#f3ede0;cursor:pointer;z-index:4}
+#kujiCard{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(30,27,23,.4);opacity:0;pointer-events:none;transition:opacity .6s;z-index:8}
+#kujiCard.show{opacity:1;pointer-events:auto}
+#kujiCard .slip{position:relative;width:118px;min-height:300px;background:#fbf8f0;border:1px solid rgba(60,55,48,.25);box-shadow:0 10px 30px rgba(0,0,0,.25);padding:46px 0 22px;display:flex;flex-direction:column;align-items:center;transform:translateY(16px);transition:transform .8s}
+#kujiCard.show .slip{transform:none}
+#kujiCard .stamp{position:absolute;top:12px;left:50%;transform:translateX(-50%);border:1.5px solid var(--shu);color:var(--shu);font-size:12px;padding:2px 6px;letter-spacing:.2em;border-radius:2px}
+#kujiText{writing-mode:vertical-rl;font-size:19px;letter-spacing:.3em;line-height:1.9;margin:0;color:var(--ink);max-height:250px}
+#kujiDate{margin-top:auto;font-size:10px;color:#9a9083;letter-spacing:.1em}
+#kujiNote{color:#f3ede0;font-size:12px;letter-spacing:.15em;min-height:1em}
+#kujiOk{font:inherit;font-size:14px;letter-spacing:.3em;padding:8px 24px;border-radius:18px;border:1px solid rgba(243,237,224,.5);background:rgba(30,27,23,.5);color:#f3ede0;cursor:pointer}
+#book{position:fixed;inset:0;display:grid;place-items:center;background:rgba(30,27,23,.42);z-index:9}
+.bookcard{width:min(360px,88vw);max-height:80vh;overflow:auto;background:#fbf8f0 repeating-linear-gradient(transparent 0 33px,rgba(120,105,85,.13) 33px 34px);border-radius:4px;padding:24px 24px 18px;box-shadow:0 14px 40px rgba(0,0,0,.25);border-left:6px solid #6e5038}
+.bookcard h2{margin:0 0 6px;font-weight:600;font-size:19px;letter-spacing:.4em}
+#bookStats{margin:0 0 14px;font-size:12px;color:#857b6e;letter-spacing:.1em}
+#bookList{list-style:none;margin:0 0 18px;padding:0}
+#bookList li{display:flex;gap:14px;height:34px;align-items:center;font-size:15px;letter-spacing:.12em;color:var(--ink)}
+#bookList li .d{font-size:12px;color:#9a9083;min-width:3.4em;letter-spacing:.05em}
+#bookList li.blank{color:transparent}
+#bookClose{font:inherit;font-size:13px;letter-spacing:.3em;padding:7px 20px;border-radius:16px;border:1px solid rgba(60,55,48,.3);background:transparent;cursor:pointer;color:var(--sumi)}
+body.sitting #toast{bottom:150px}
+#qBtns{display:flex;gap:4px}
+#qBtns button{font:inherit;font-size:12px;padding:4px 9px;border-radius:12px;border:1px solid rgba(60,55,48,.28);background:#fff;color:var(--sumi);cursor:pointer;letter-spacing:.05em}
+#qBtns button.on{background:#3c3731;color:#f3ede0;border-color:#3c3731}
+#fade.msg{display:grid;place-items:center;font-size:15px;letter-spacing:.3em;color:var(--sumi)}
+#perfTip{position:fixed;left:50%;top:110px;transform:translateX(-50%);width:min(320px,86vw);background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:10px;padding:14px 16px;box-shadow:0 8px 26px rgba(40,35,30,.18);z-index:9;display:none;text-align:center}
+#perfTip.show{display:block}
+#perfTip p{margin:0 0 10px;font-size:14px;line-height:1.7;color:var(--ink)}
+#perfTip div{display:flex;gap:8px;justify-content:center}
+#perfTip button{font:inherit;font-size:13px;padding:6px 18px;border-radius:16px;border:1px solid rgba(60,55,48,.3);background:#fff;cursor:pointer}
+#perfYes{background:#3c3731!important;color:#f3ede0!important}
+#credits{font-size:10px;color:#9a9083;margin:12px 0 0;line-height:1.6;letter-spacing:.03em}
+#fade{position:fixed;inset:0;background:#f4f2ec;opacity:0;pointer-events:none;transition:opacity .35s;z-index:5}
+#fade.on{opacity:1}
+#loading{position:fixed;inset:0;z-index:30;display:grid;place-items:center;font-size:14px;letter-spacing:.3em;color:var(--sumi);z-index:20;background:#dde4e2}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="title"><div class="seal">庭</div><span>枯山水小庭</span></div>
+<button id="helpBtn" aria-label="說明">？</button>
+<button id="bookBtn" aria-label="庭院手帖">帖<i id="bookDot"></i></button>
+<button id="soundBtn" aria-label="聲音設定">音</button>
+<div id="soundPanel" class="hidden">
+  <div class="sp-row"><span>聲音</span><button id="muteBtn" class="sw on">開</button></div>
+  <label class="sp-row"><span>音樂</span><input type="range" id="volMusic" min="0" max="100"></label>
+  <label class="sp-row"><span>環境聲</span><input type="range" id="volAmb" min="0" max="100"></label>
+  <div class="sp-row"><span>畫質</span><span id="qBtns"><button data-q="low">省電</button><button data-q="mid">標準</button><button data-q="high">精緻</button></span></div>
+  <button id="sleepBtn" class="wide">睡前模式・10 分鐘後慢慢安靜</button>
+</div>
+<div id="sleepOverlay"><p>晚安。</p><small>輕觸畫面，回到庭院</small></div>
+<div id="seasons"><button data-s="spring">春</button><button data-s="summer">夏</button><button data-s="autumn">秋</button><button data-s="winter">冬</button><span class="sep"></span><button id="timeBtn" aria-label="時間">時</button></div>
+<div id="seasonCard"><b id="scTitle"></b><span id="scText"></span></div>
+<div id="fade"></div>
+<div id="teaHint"></div><button id="teaDrink" class="hidden">喝一口</button>
+<div id="kujiCard"><div class="slip"><span class="stamp">一言</span><p id="kujiText"></p><small id="kujiDate"></small></div><small id="kujiNote"></small><button id="kujiOk">收下</button></div>
+<div id="book" class="hidden"><div class="bookcard"><h2>庭院手帖</h2><p id="bookStats"></p><ul id="bookList"></ul><button id="bookClose">闔上</button></div></div>
+<div id="leafModal" class="hidden"><div class="mcard"><p id="leafModalTitle">在葉子上寫一個詞</p><input id="leafInput" maxlength="10" placeholder="一個詞就好" autocomplete="off"><div class="mbtns"><button id="leafCancel">算了</button><button id="leafOk">放下</button></div></div></div>
+<div id="askCard"><small>帶著走的一個問題</small><p id="askText"></p><button id="askOk">好</button></div>
+<div id="visitNote"></div>
+<div id="editBar" class="hidden">
+  <div class="row"><button data-add="tall">＋立石</button><button data-add="trio">＋三尊石</button><button data-add="flat">＋平石</button><button data-add="moss">＋苔</button></div>
+  <div class="row"><button data-op="rot">旋轉</button><button data-op="smaller">縮小</button><button data-op="bigger">放大</button><button data-op="del">移除</button><button data-op="default">恢復原樣</button><button id="editDone">完成</button></div>
+</div>
+<div id="sitPanel" class="hidden">
+  <div class="row" id="sitChoices"><span class="lbl">靜坐</span><button data-m="t1">1 分</button><button data-m="t3">3 分</button><button data-m="t5">5 分</button><button data-m="breath">呼吸</button><button data-m="listen">聽</button><button data-m="leaf">寫葉子</button><button data-m="tea">點茶</button></div>
+  <div class="row hidden" id="sitRunning"><span id="sitInfo"></span><button id="sitStop">結束</button></div>
+</div>
+<div id="breathDot"></div>
+<div id="listenOverlay"><p id="listenText"></p><button id="listenBack">提早結束</button></div>
+<div id="joy" class="hidden"><div id="knob"></div></div>
+<div id="actions">
+  <button id="ctxBtn" class="btn ctx hidden"></button>
+  <button id="rakeBtn" class="btn">耙沙</button>
+  <button id="resetBtn" class="btn small">耙平</button>
+  <button id="editBtn" class="btn small">造庭</button>
+</div>
+<div id="toast"></div>
+<div id="perfTip"><p>畫面好像有點卡，要換成比較省電的畫質嗎？</p><div><button id="perfNo">不用</button><button id="perfYes">換</button></div></div>
+<div id="poem"></div>
+<div id="intro">
+  <div class="card">
+    <div class="seal">庭</div>
+    <h1>枯山水小庭</h1>
+    <p class="lead">白砂是水，石頭是島。<br>走一走，留下腳印也沒關係。</p>
+    <ul class="how" id="how"></ul>
+    <button id="startBtn">走進庭院</button>
+    <p id="credits">部分材質取自 three.js 範例素材；草地材質出自 OpenGameArt（CC BY 3.0）</p>
+  </div>
+</div>
+<div id="loading">整理庭院中…</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
