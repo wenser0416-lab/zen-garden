@@ -122,6 +122,7 @@ body:has(#soundPanel:not(.hidden)) #visitNote{opacity:0}
 #bookList li.blank{color:transparent}
 #bookClose{font:inherit;font-size:13px;letter-spacing:.3em;padding:7px 20px;border-radius:16px;border:1px solid rgba(60,55,48,.3);background:transparent;cursor:pointer;color:var(--sumi)}
 body.sitting #toast{bottom:150px}
+body.photo #toast,body.gazing #toast{bottom:96px}
 #qBtns{display:flex;gap:4px}
 #qBtns button{font:inherit;font-size:12px;padding:4px 9px;border-radius:12px;border:1px solid rgba(60,55,48,.28);background:#fff;color:var(--sumi);cursor:pointer;letter-spacing:.05em}
 #qBtns button.on{background:#3c3731;color:#f3ede0;border-color:#3c3731}
@@ -133,6 +134,55 @@ body.sitting #toast{bottom:150px}
 #perfTip button{font:inherit;font-size:13px;padding:6px 18px;border-radius:16px;border:1px solid rgba(60,55,48,.3);background:#fff;cursor:pointer}
 #perfYes{background:#3c3731!important;color:#f3ede0!important}
 #credits{font-size:10px;color:#9a9083;margin:12px 0 0;line-height:1.6;letter-spacing:.03em}
+#zoomBar{position:fixed;left:16px;top:42%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:3}
+#zoomBar button{width:40px;height:40px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:18px;color:var(--sumi);cursor:pointer;padding:0;box-shadow:0 2px 8px rgba(40,35,30,.1)}
+#gazeBar{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);display:none;z-index:4}
+#gazeBar button{font:inherit;font-size:15px;letter-spacing:.3em;padding:10px 26px 10px 32px;border-radius:22px;border:1px solid rgba(60,55,48,.25);background:var(--paper);color:var(--ink);cursor:pointer;box-shadow:0 3px 10px rgba(40,35,30,.15)}
+#gazeHint{position:fixed;left:50%;top:22%;transform:translateX(-50%);padding:9px 18px;border-radius:20px;background:rgba(247,243,234,.85);font-size:13px;letter-spacing:.1em;color:var(--sumi);opacity:0;transition:opacity 1s;pointer-events:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+#gazeHint.show{opacity:1}
+body.gazing #gazeBar{display:block}
+body.gazing #actions,body.gazing #joy,body.gazing #sitPanel,body.gazing #seasons,body.gazing #title,body.gazing #visitNote,body.gazing #poem{display:none!important}
+body.editing #zoomBar{display:none}
+#moodBtn{border-style:dotted!important}
+#moodPick{position:fixed;inset:0;display:grid;place-items:center;background:rgba(30,27,23,.35);z-index:12}
+#moodPick .mt{font-size:17px;letter-spacing:.15em;margin-bottom:16px;color:var(--ink)}
+.moods{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+.moods button{width:52px;height:52px;border-radius:50%;border:1px solid rgba(60,55,48,.28);background:#fff;font:inherit;font-size:19px;color:var(--ink);cursor:pointer}
+.moods button.on{background:#3c3731;color:#f3ede0}
+.moods button[data-m=sun]{background:#fbf1d6}.moods button[data-m=cloud]{background:#eceff0}.moods button[data-m=rain]{background:#e3ebf3}.moods button[data-m=fog]{background:#f2f4f4}.moods button[data-m=snow]{background:#f8fbfd}
+.moods button.on{background:#3c3731!important;color:#f3ede0}
+.mnote{display:block;font-size:12px;color:#857b6e;letter-spacing:.08em;margin-bottom:6px}
+#keepRow{display:flex;gap:6px;align-items:center;justify-content:center;font-size:12px;color:#857b6e;margin-top:12px;letter-spacing:.1em}
+.askb{display:flex;gap:8px;justify-content:center}
+#askWrite{font:inherit;font-size:13px;letter-spacing:.2em;padding:6px 16px;border-radius:16px;border:1px solid rgba(60,55,48,.3);background:#fff;cursor:pointer;color:var(--sumi)}
+#bookTabs{display:flex;gap:6px;margin:0 0 10px}
+#bookTabs button{font:inherit;font-size:12px;letter-spacing:.2em;padding:4px 12px;border-radius:14px;border:1px solid rgba(60,55,48,.25);background:transparent;color:var(--sumi);cursor:pointer}
+#bookTabs button.on{background:#3c3731;color:#f3ede0;border-color:#3c3731}
+#bookList li.moodrow{display:flex;flex-wrap:wrap;gap:8px;height:auto;padding:6px 0}
+.mchip{width:42px;height:50px;border-radius:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(60,55,48,.15)}
+.mchip b{font-weight:600;font-size:15px}.mchip i{font-style:normal;font-size:10px;color:#5c554b}
+#bookList li.note{display:block;height:auto;padding:8px 0;border-bottom:1px dashed rgba(60,55,48,.15);line-height:1.7}
+#bookList li.note small{display:block;font-size:11px;color:#9a9083}
+#bookList li.empty{height:auto;font-size:13px;color:#9a9083;line-height:1.8;padding:6px 0}
+#bookYear{display:flex;justify-content:center;margin:0 0 14px}
+#photoBar{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);display:none;gap:8px;z-index:6;flex-wrap:wrap;justify-content:center;width:max-content;max-width:94vw}
+#photoBar button{font:inherit;font-size:14px;letter-spacing:.15em;padding:9px 16px;border-radius:20px;border:1px solid rgba(60,55,48,.25);background:var(--paper);cursor:pointer;color:var(--ink)}
+#photoBar button.on{border-color:var(--shu);color:var(--shu)}
+#phShot{background:#3c3731!important;color:#f3ede0!important}
+#phCap{position:fixed;top:8vmin;right:6vmin;writing-mode:vertical-rl;font-size:5.2vmin;letter-spacing:.25em;color:#2b2824;text-shadow:0 0 2.5vmin rgba(255,255,255,.9);display:none;pointer-events:none;z-index:5;font-weight:600}
+#phStamp{position:fixed;left:5vmin;bottom:calc(5vmin + 60px);display:none;align-items:flex-end;gap:2vmin;pointer-events:none;z-index:5}
+#phStamp b{width:9vmin;height:9vmin;border-radius:1.2vmin;background:rgba(163,63,44,.92);color:#fbf3e6;display:grid;place-items:center;font-size:5.6vmin;font-weight:600}
+#phStamp small{color:#fff;font-size:2.4vmin;text-shadow:0 0 1vmin rgba(0,0,0,.6);letter-spacing:.1em}
+body.photo #photoBar{display:flex}
+body.photo #actions,body.photo #joy,body.photo #sitPanel,body.photo #seasons,body.photo #title,body.photo #visitNote,body.photo #poem,body.photo #helpBtn,body.photo #soundBtn,body.photo #bookBtn,body.photo #zoomBar{display:none!important}
+#phResult{position:fixed;inset:0;display:grid;place-items:center;background:rgba(20,18,15,.6);z-index:13}
+.phbox{width:min(560px,92vw);background:var(--paper);border-radius:10px;padding:14px;text-align:center}
+.phbox img{width:100%;border-radius:4px;display:block}
+.phbox p{font-size:12px;color:#857b6e;letter-spacing:.08em;margin:10px 0}
+#codeModal{position:fixed;inset:0;display:grid;place-items:center;background:rgba(30,27,23,.35);z-index:12}
+#codeText{width:100%;font-family:ui-monospace,monospace;font-size:13px;padding:8px;border:1px solid rgba(60,55,48,.25);border-radius:6px;background:#fff;resize:none;word-break:break-all}
+#codeNote{display:block;min-height:1.4em;font-size:12px;color:#857b6e;margin-top:6px}
+#codeTitle{font-size:14px;line-height:1.7;letter-spacing:.06em}
 #fade{position:fixed;inset:0;background:#f4f2ec;opacity:0;pointer-events:none;transition:opacity .35s;z-index:5}
 #fade.on{opacity:1}
 #loading{position:fixed;inset:0;z-index:30;display:grid;place-items:center;font-size:14px;letter-spacing:.3em;color:var(--sumi);z-index:20;background:#dde4e2}
@@ -152,17 +202,18 @@ body.sitting #toast{bottom:150px}
   <button id="sleepBtn" class="wide">睡前模式・10 分鐘後慢慢安靜</button>
 </div>
 <div id="sleepOverlay"><p>晚安。</p><small>輕觸畫面，回到庭院</small></div>
-<div id="seasons"><button data-s="spring">春</button><button data-s="summer">夏</button><button data-s="autumn">秋</button><button data-s="winter">冬</button><span class="sep"></span><button id="timeBtn" aria-label="時間">時</button></div>
+<div id="seasons"><button data-s="spring">春</button><button data-s="summer">夏</button><button data-s="autumn">秋</button><button data-s="winter">冬</button><span class="sep"></span><button id="timeBtn" aria-label="時間">時</button><button id="moodBtn" aria-label="心情天氣">心</button></div>
 <div id="seasonCard"><b id="scTitle"></b><span id="scText"></span></div>
 <div id="fade"></div>
 <div id="teaHint"></div><button id="teaDrink" class="hidden">喝一口</button>
 <div id="kujiCard"><div class="slip"><span class="stamp">一言</span><p id="kujiText"></p><small id="kujiDate"></small></div><small id="kujiNote"></small><button id="kujiOk">收下</button></div>
-<div id="book" class="hidden"><div class="bookcard"><h2>庭院手帖</h2><p id="bookStats"></p><ul id="bookList"></ul><button id="bookClose">闔上</button></div></div>
-<div id="leafModal" class="hidden"><div class="mcard"><p id="leafModalTitle">在葉子上寫一個詞</p><input id="leafInput" maxlength="10" placeholder="一個詞就好" autocomplete="off"><div class="mbtns"><button id="leafCancel">算了</button><button id="leafOk">放下</button></div></div></div>
-<div id="askCard"><small>帶著走的一個問題</small><p id="askText"></p><button id="askOk">好</button></div>
+<div id="book" class="hidden"><div class="bookcard"><h2>庭院手帖</h2><div id="bookTabs"><button data-t="met" class="on">遇見</button><button data-t="mood">心情</button><button data-t="notes">短句</button><button data-t="year">一年</button></div><p id="bookStats"></p><ul id="bookList"></ul><div id="bookYear" style="display:none"><canvas id="yearCanvas"></canvas></div><button id="bookClose">闔上</button></div></div>
+<div id="leafModal" class="hidden"><div class="mcard"><p id="leafModalTitle">在葉子上寫一個詞</p><input id="leafInput" maxlength="10" placeholder="一個詞就好" autocomplete="off"><div class="mbtns"><button id="leafCancel">算了</button><button id="leafOk">放下</button></div><label id="keepRow"><input type="checkbox" id="keepChk"> 也收進手帖</label></div></div>
+<div id="askCard"><small>帶著走的一個問題</small><p id="askText"></p><div class="askb"><button id="askWrite">寫下來</button><button id="askOk">好</button></div></div>
 <div id="visitNote"></div>
 <div id="editBar" class="hidden">
   <div class="row"><button data-add="tall">＋立石</button><button data-add="trio">＋三尊石</button><button data-add="flat">＋平石</button><button data-add="moss">＋苔</button></div>
+  <div class="row"><button id="shareCode">分享庭院代碼</button><button id="enterCode">輸入代碼</button><button id="restoreMine" class="hidden">換回我的庭院</button></div>
   <div class="row"><button data-op="rot">旋轉</button><button data-op="smaller">縮小</button><button data-op="bigger">放大</button><button data-op="del">移除</button><button data-op="default">恢復原樣</button><button id="editDone">完成</button></div>
 </div>
 <div id="sitPanel" class="hidden">
@@ -177,8 +228,18 @@ body.sitting #toast{bottom:150px}
   <button id="rakeBtn" class="btn">耙沙</button>
   <button id="resetBtn" class="btn small">耙平</button>
   <button id="editBtn" class="btn small">造庭</button>
+  <button id="gazeBtn" class="btn small">望天</button>
+  <button id="photoBtn" class="btn small">拍照</button>
 </div>
 <div id="toast"></div>
+<div id="moodPick" class="hidden"><div class="mcard"><p class="mt">今天的心情，像什麼天氣？</p><div class="moods"><button data-m="sun"><b>晴</b></button><button data-m="cloud"><b>雲</b></button><button data-m="rain"><b>雨</b></button><button data-m="fog"><b>霧</b></button><button data-m="snow"><b>雪</b></button></div><small class="mnote">不用想太多，選一個最接近的就好。</small><div class="mbtns"><button id="moodClear">不改變天氣</button><button id="moodSkip">先不選</button></div></div></div>
+<div id="photoBar"><button id="phCaption">寫一句</button><button id="phSeal" class="on">落款</button><button id="phShot">拍下來</button><button id="phExit">離開</button></div>
+<div id="phCap"></div><div id="phStamp"><b>庭</b><small></small></div>
+<div id="phResult" class="hidden"><div class="phbox"><img id="phImg" alt="庭院照片"><p>手機：長按圖片儲存　電腦：在圖片上按右鍵另存</p><div class="mbtns"><button id="phDownload">下載</button><button id="phClose">好</button></div></div></div>
+<div id="codeModal" class="hidden"><div class="mcard"><p id="codeTitle"></p><textarea id="codeText" rows="3"></textarea><small id="codeNote"></small><div class="mbtns"><button id="codeCancel">關閉</button><button id="codeOk">複製</button></div></div></div>
+<div id="zoomBar"><button id="zoomIn" aria-label="拉近">＋</button><button id="zoomOut" aria-label="拉遠">－</button></div>
+<div id="gazeBar"><button id="gazeBack">回來</button></div>
+<div id="gazeHint">抬頭看看天空・拖曳看四周，雙指或＋－可以拉近</div>
 <div id="perfTip"><p>畫面好像有點卡，要換成比較省電的畫質嗎？</p><div><button id="perfNo">不用</button><button id="perfYes">換</button></div></div>
 <div id="poem"></div>
 <div id="intro">
