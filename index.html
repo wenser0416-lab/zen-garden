@@ -7,6 +7,7 @@
 <link rel="icon" href="favicon.ico?v=1" sizes="any">
 <link rel="icon" href="favicon.svg?v=1" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{--paper:rgba(247,243,234,.9);--ink:#2b2824;--sumi:#4a443c;--shu:#a33f2c;}
@@ -39,7 +40,18 @@ canvas#c{display:block;position:fixed;inset:0;width:100vw;height:100vh;touch-act
 .card .seal{position:absolute;top:16px;right:18px;width:34px;height:34px;border:1.5px solid var(--shu);color:var(--shu);display:grid;place-items:center;border-radius:3px;transform:rotate(4deg);font-size:18px}
 .card h1{margin:4px 0 14px;font-weight:600;font-size:24px;letter-spacing:.35em}
 .card .lead{margin:0 0 18px;line-height:1.9;color:var(--sumi);font-size:15px}
-.card .how{margin:0 0 22px;padding:12px 10px;border-top:1px dashed rgba(60,55,48,.25);border-bottom:1px dashed rgba(60,55,48,.25);list-style:none;font-size:13px;line-height:2;color:#5c554b}
+.card .soft{margin:-6px 0 14px;font-size:12.5px;color:#7a7064;letter-spacing:.08em}
+#howWrap{margin:0 0 20px;font-size:13px;color:#6e655a}
+#howWrap summary{cursor:pointer;list-style:none;display:inline-block;padding:3px 12px;border:1px solid rgba(60,55,48,.22);border-radius:14px;letter-spacing:.15em}
+#howWrap summary::-webkit-details-marker{display:none}
+#howWrap[open] summary{margin-bottom:10px}
+#hint{position:fixed;left:50%;top:104px;transform:translate(-50%,-6px);z-index:8;display:flex;align-items:center;gap:10px;max-width:88vw;padding:10px 18px 10px 12px;border-radius:22px;background:rgba(247,243,234,.93);box-shadow:0 6px 22px rgba(40,35,30,.16);font-size:14px;line-height:1.6;letter-spacing:.08em;color:var(--ink);opacity:0;transition:opacity .9s,transform .9s;pointer-events:none}
+#hint.show{opacity:1;transform:translate(-50%,0)}
+#hint i{flex:none;width:20px;height:20px;border:1.3px solid var(--shu);color:var(--shu);border-radius:3px;font-style:normal;font-size:11px;display:grid;place-items:center;transform:rotate(-4deg)}
+body.bowling #hint,body.photo #hint,body.gazing #hint{display:none}
+.btn.glow{animation:glow 2.2s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(163,63,44,.0),0 2px 8px rgba(0,0,0,.12)}50%{box-shadow:0 0 0 7px rgba(163,63,44,.22),0 2px 8px rgba(0,0,0,.12)}}
+.card .how{margin:0 0 4px;padding:12px 10px;border-top:1px dashed rgba(60,55,48,.25);border-bottom:1px dashed rgba(60,55,48,.25);list-style:none;font-size:13px;line-height:2;color:#5c554b}
 #startBtn{font:inherit;font-size:16px;letter-spacing:.3em;padding:11px 28px 11px 34px;border-radius:24px;border:none;background:#3c3731;color:#f3ede0;cursor:pointer}
 #seasons{position:fixed;top:54px;left:16px;display:flex;gap:6px}
 #seasons button{width:34px;height:34px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:15px;color:var(--sumi);cursor:pointer;padding:0;transition:background .2s,color .2s}
@@ -208,7 +220,10 @@ body.bowling #bowlBar{display:flex}
 body.bowling #actions,body.bowling #joy,body.bowling #sitPanel,body.bowling #seasons,body.bowling #title,body.bowling #visitNote,body.bowling #poem,body.bowling #zoomBar,body.bowling #toast{display:none!important}
 #fade{position:fixed;inset:0;background:#f4f2ec;opacity:0;pointer-events:none;transition:opacity .35s;z-index:5}
 #fade.on{opacity:1}
-#loading{position:fixed;inset:0;z-index:30;display:grid;place-items:center;font-size:14px;letter-spacing:.3em;color:var(--sumi);z-index:20;background:#dde4e2}
+#loading{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:#ebe6da;transition:opacity .9s}
+#loading.done{opacity:0;pointer-events:none}
+#ldCanvas{width:240px;height:240px}
+#ldText{margin:0;font-size:14px;letter-spacing:.3em;color:var(--sumi);transition:opacity .6s;min-height:1.6em}
 </style>
 </head>
 <body>
@@ -273,7 +288,8 @@ body.bowling #actions,body.bowling #joy,body.bowling #sitPanel,body.bowling #sea
     <div class="seal">庭</div>
     <h1>枯山水小庭</h1>
     <p class="lead">白砂是水，石頭是島。<br>走一走，留下腳印也沒關係。</p>
-    <ul class="how" id="how"></ul>
+    <p class="soft">不用先讀說明。走進去，庭院會慢慢告訴你。</p>
+    <details id="howWrap"><summary>怎麼玩？</summary><ul class="how" id="how"></ul></details>
     <button id="startBtn">走進庭院</button>
     <div id="lineBox">
       <div class="lineTxt"><span>如果這座小庭陪了你一會兒，<br>歡迎來 LINE 打聲招呼。</span><a href="https://line.me/R/ti/p/%40458ipuws" target="_blank" rel="noopener">加入 LINE　@458ipuws</a></div>
@@ -282,8 +298,38 @@ body.bowling #actions,body.bowling #joy,body.bowling #sitPanel,body.bowling #sea
     <p id="credits">部分材質取自 three.js 範例素材；草地材質出自 OpenGameArt（CC BY 3.0）</p>
   </div>
 </div>
-<div id="loading">整理庭院中…</div>
+<div id="loading"><canvas id="ldCanvas" width="480" height="480"></canvas><p id="ldText">整理庭院中</p></div>
+<div id="hint"><i>庭</i><span></span></div>
+<script>
+(()=>{ // 等待的時候：一筆一筆耙出沙紋
+  const L=document.getElementById('loading'),c=document.getElementById('ldCanvas'),g=c.getContext('2d'),T=document.getElementById('ldText');
+  const S=480,C=S/2,t0=performance.now(),rings=[];
+  for(let r=62,k=0;r<215;r+=15,k++) rings.push({r,ph:Math.random()*6,a:0.6+0.25*Math.random()});
+  const stone=[];for(let i=0;i<14;i++){const a=i/14*Math.PI*2;stone.push([Math.cos(a)*(40+Math.random()*9),Math.sin(a)*(30+Math.random()*7)-6]);}
+  const words=['整理庭院中','耙一道沙紋','把石頭擺正一點','等風停一下','快好了'];let wi=0;
+  setInterval(()=>{if(!document.getElementById('loading'))return;T.style.opacity=0;setTimeout(()=>{wi=Math.min(wi+1,words.length-1);T.textContent=words[wi];T.style.opacity=1;},600);},2200);
+  function draw(now){
+    if(!document.getElementById('loading'))return;
+    const CY=rings.length*0.55+0.9+2.8, tr=(now-t0)/1000, t=tr%CY, ga=Math.min(1,(CY-t)/0.9); g.clearRect(0,0,S,S);
+    const fade=g.createRadialGradient(C,C,60,C,C,C); fade.addColorStop(0,'rgba(255,255,255,.35)'); fade.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=fade; g.fillRect(0,0,S,S);
+    g.lineCap='round';
+    rings.forEach((R,k)=>{ const st=k*0.55, p=Math.min(1,Math.max(0,(t-st)/0.9)); if(p<=0)return;
+      const a0=R.ph, a1=a0+p*Math.PI*2;
+      for(let j=-1;j<=1;j++){ g.beginPath(); g.strokeStyle=`rgba(112,100,84,${0.45*R.a*ga})`; g.lineWidth=2.2;
+        for(let a=a0;a<=a1+0.001;a+=0.05){const rr=R.r+j*4.2+Math.sin(a*3+R.ph)*1.6+Math.sin(a*7)*0.7, x=C+Math.cos(a)*rr, y=C+Math.sin(a)*rr*0.86; a===a0?g.moveTo(x,y):g.lineTo(x,y);} g.stroke(); }
+      if(p<1&&ga>=1){const a=a1,x=C+Math.cos(a)*R.r,y=C+Math.sin(a)*R.r*0.86; g.fillStyle='rgba(110,85,55,.55)'; g.beginPath(); g.arc(x,y,4,0,7); g.fill();}
+    });
+    // 苔與石
+    g.fillStyle='rgba(98,122,72,.75)'; g.beginPath(); stone.forEach(([x,y],i)=>{const X=C+x*1.25,Y=C+y*1.1+16;i?g.lineTo(X,Y):g.moveTo(X,Y);}); g.closePath(); g.fill();
+    const sg=g.createLinearGradient(C-40,C-40,C+40,C+30); sg.addColorStop(0,'#a7a39b'); sg.addColorStop(1,'#6d6a64'); g.fillStyle=sg;
+    g.beginPath(); stone.forEach(([x,y],i)=>{const X=C+x,Y=C+y;i?g.lineTo(X,Y):g.moveTo(X,Y);}); g.closePath(); g.fill();
+    g.fillStyle='rgba(255,255,255,.18)'; g.beginPath(); g.ellipse(C-12,C-20,14,7,-0.4,0,7); g.fill();
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>
 
-<script type="module" src="app.js?v=ce96030c2d68"></script>
+<script type="module" src="app.js?v=20eeac45f85c"></script>
 </body>
 </html>
