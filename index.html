@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>枯山水小庭</title>
 <link rel="icon" href="favicon.ico?v=1" sizes="any">
 <link rel="icon" href="favicon.svg?v=1" type="image/svg+xml">
@@ -10,27 +10,28 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--paper:rgba(247,243,234,.9);--ink:#2b2824;--sumi:#4a443c;--shu:#a33f2c;}
+:root{--st:env(safe-area-inset-top,0px);--sr:env(safe-area-inset-right,0px);--sb:env(safe-area-inset-bottom,0px);--sl:env(safe-area-inset-left,0px);--paper:rgba(247,243,234,.9);--ink:#2b2824;--sumi:#4a443c;--shu:#a33f2c;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden;background:#dde4e2;font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;color:var(--ink);user-select:none;-webkit-user-select:none}
 canvas#c{display:block;position:fixed;inset:0;width:100vw;height:100vh;touch-action:none}
-#title{position:fixed;top:14px;left:16px;display:flex;align-items:center;gap:10px;pointer-events:none}
+#title span{background:rgba(247,243,234,.72);padding:3px 10px 3px 12px;border-radius:14px;color:var(--ink)!important;text-shadow:none!important}
+#title{position:fixed;top:calc(14px + var(--st));left:calc(16px + var(--sl));display:flex;align-items:center;gap:10px;pointer-events:none}
 #title .seal{width:30px;height:30px;border:1.5px solid var(--shu);color:var(--shu);display:grid;place-items:center;font-size:16px;border-radius:3px;transform:rotate(-3deg);background:rgba(255,255,255,.35)}
 #title span{font-size:15px;letter-spacing:.3em;color:var(--sumi);text-shadow:0 1px 0 rgba(255,255,255,.6)}
-#helpBtn{position:fixed;top:12px;right:14px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:16px;color:var(--sumi);cursor:pointer}
-#soundBtn{position:fixed;top:12px;right:58px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:15px;color:var(--sumi);cursor:pointer;padding:0}
+#helpBtn{position:fixed;top:calc(12px + var(--st));right:calc(14px + var(--sr));width:36px;height:36px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:16px;color:var(--sumi);cursor:pointer}
+#soundBtn{position:fixed;top:calc(12px + var(--st));right:calc(58px + var(--sr));width:36px;height:36px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:15px;color:var(--sumi);cursor:pointer;padding:0}
 #soundBtn.off{color:rgba(74,68,60,.4);text-decoration:line-through}
-#actions{position:fixed;right:16px;bottom:22px;display:flex;flex-direction:column;align-items:center;gap:12px}
+#actions{position:fixed;right:calc(16px + var(--sr));bottom:calc(22px + var(--sb));display:flex;flex-direction:column;align-items:center;gap:12px}
 .btn{width:66px;height:66px;border-radius:50%;border:1px solid rgba(60,55,48,.28);background:var(--paper);font:inherit;font-size:15px;letter-spacing:.1em;color:var(--ink);cursor:pointer;box-shadow:0 3px 10px rgba(40,35,30,.12);transition:transform .15s,background .2s,color .2s}
 .btn:active{transform:scale(.93)}
 .btn.small{width:50px;height:50px;font-size:12px;color:var(--sumi)}
 .btn.on{background:#3c3731;color:#f3ede0;border-color:#3c3731}
 .btn.ctx{width:74px;height:74px;font-size:15px;border:1.5px solid var(--shu);color:var(--shu)}
 .hidden{display:none!important}
-#joy{position:fixed;left:34px;bottom:34px;width:120px;height:120px;border-radius:50%;border:1.5px dashed rgba(60,55,48,.28);background:rgba(255,255,255,.12);pointer-events:none;opacity:.7;transition:opacity .2s}
+#joy{position:fixed;left:calc(34px + var(--sl));bottom:calc(34px + var(--sb));width:120px;height:120px;border-radius:50%;border:1.5px dashed rgba(60,55,48,.28);background:rgba(255,255,255,.12);pointer-events:none;opacity:.7;transition:opacity .2s}
 #joy.active{opacity:1;border-style:solid;background:rgba(255,255,255,.22)}
 #knob{position:absolute;left:50%;top:50%;width:50px;height:50px;margin:-25px 0 0 -25px;border-radius:50%;background:var(--paper);border:1px solid rgba(60,55,48,.3);box-shadow:0 2px 6px rgba(0,0,0,.1)}
-#toast{position:fixed;z-index:9;left:50%;bottom:30px;transform:translateX(-50%) translateY(10px);background:rgba(43,40,36,.82);color:#f4efe4;padding:9px 18px;border-radius:20px;font-size:14px;letter-spacing:.08em;opacity:0;transition:opacity .4s,transform .4s;pointer-events:none;white-space:nowrap;max-width:80vw;overflow:hidden;text-overflow:ellipsis}
+#toast{position:fixed;z-index:9;left:50%;bottom:calc(30px + var(--sb));transform:translateX(-50%) translateY(10px);background:rgba(43,40,36,.82);color:#f4efe4;padding:9px 18px;border-radius:20px;font-size:14px;letter-spacing:.08em;opacity:0;transition:opacity .4s,transform .4s;pointer-events:none;white-space:nowrap;max-width:80vw;overflow:hidden;text-overflow:ellipsis}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 #poem{position:fixed;top:16%;left:12%;writing-mode:vertical-rl;font-size:22px;letter-spacing:.45em;color:#2f2b26;text-shadow:0 0 12px rgba(255,255,255,.9),0 0 3px rgba(255,255,255,.9);opacity:0;transition:opacity 2s;pointer-events:none}
 #poem.show{opacity:1}
@@ -45,30 +46,32 @@ canvas#c{display:block;position:fixed;inset:0;width:100vw;height:100vh;touch-act
 #howWrap summary{cursor:pointer;list-style:none;display:inline-block;padding:3px 12px;border:1px solid rgba(60,55,48,.22);border-radius:14px;letter-spacing:.15em}
 #howWrap summary::-webkit-details-marker{display:none}
 #howWrap[open] summary{margin-bottom:10px}
-#hint{position:fixed;left:50%;top:104px;transform:translate(-50%,-6px);z-index:8;display:flex;align-items:center;gap:10px;max-width:88vw;padding:10px 18px 10px 12px;border-radius:22px;background:rgba(247,243,234,.93);box-shadow:0 6px 22px rgba(40,35,30,.16);font-size:14px;line-height:1.6;letter-spacing:.08em;color:var(--ink);opacity:0;transition:opacity .9s,transform .9s;pointer-events:none}
+#hint{position:fixed;left:50%;top:calc(104px + var(--st));transform:translate(-50%,-6px);z-index:8;display:flex;align-items:center;gap:10px;max-width:88vw;padding:10px 18px 10px 12px;border-radius:22px;background:rgba(247,243,234,.93);box-shadow:0 6px 22px rgba(40,35,30,.16);font-size:14px;line-height:1.6;letter-spacing:.08em;color:var(--ink);opacity:0;transition:opacity .9s,transform .9s;pointer-events:none}
 #hint.show{opacity:1;transform:translate(-50%,0)}
+#hint.show #hintX{pointer-events:auto}
+#hintX{flex:none;margin:-4px -8px -4px 2px;width:28px;height:28px;border:0;background:none;font:inherit;font-size:17px;color:#8a8073;cursor:pointer;pointer-events:none}
 #hint i{flex:none;width:20px;height:20px;border:1.3px solid var(--shu);color:var(--shu);border-radius:3px;font-style:normal;font-size:11px;display:grid;place-items:center;transform:rotate(-4deg)}
 body.bowling #hint,body.photo #hint,body.gazing #hint{display:none}
 .btn.glow{animation:glow 2.2s ease-in-out infinite}
 @keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(163,63,44,.0),0 2px 8px rgba(0,0,0,.12)}50%{box-shadow:0 0 0 7px rgba(163,63,44,.22),0 2px 8px rgba(0,0,0,.12)}}
 .card .how{margin:0 0 4px;padding:12px 10px;border-top:1px dashed rgba(60,55,48,.25);border-bottom:1px dashed rgba(60,55,48,.25);list-style:none;font-size:13px;line-height:2;color:#5c554b}
 #startBtn{font:inherit;font-size:16px;letter-spacing:.3em;padding:11px 28px 11px 34px;border-radius:24px;border:none;background:#3c3731;color:#f3ede0;cursor:pointer}
-#seasons{position:fixed;top:54px;left:16px;display:flex;gap:6px}
+#seasons{position:fixed;top:calc(54px + var(--st));left:calc(16px + var(--sl));display:flex;gap:6px}
 #seasons button{width:34px;height:34px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:15px;color:var(--sumi);cursor:pointer;padding:0;transition:background .2s,color .2s}
 #seasons button.on{background:#3c3731;color:#f3ede0;border-color:#3c3731}
-#seasonCard{position:fixed;top:100px;left:50%;transform:translateX(-50%) translateY(-6px);width:min(340px,84vw);background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:6px;padding:12px 16px;text-align:center;box-shadow:0 6px 24px rgba(40,35,30,.14);opacity:0;transition:opacity .5s,transform .5s;pointer-events:none}
+#seasonCard{position:fixed;top:calc(100px + var(--st));left:50%;transform:translateX(-50%) translateY(-6px);width:min(340px,84vw);background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:6px;padding:12px 16px;text-align:center;box-shadow:0 6px 24px rgba(40,35,30,.14);opacity:0;transition:opacity .5s,transform .5s;pointer-events:none}
 #seasonCard.show{opacity:1;transform:translateX(-50%) translateY(0)}
 #seasonCard b{display:block;font-weight:600;font-size:16px;letter-spacing:.25em;margin-bottom:6px}
 #seasonCard span{font-size:13px;line-height:1.8;color:#5c554b}
 #seasons .sep{width:6px}
 #timeBtn{border-style:dashed!important}
-#sitPanel{position:fixed;left:16px;bottom:24px;max-width:calc(100vw - 112px);z-index:3}
+#sitPanel{position:fixed;left:calc(16px + var(--sl));bottom:calc(24px + var(--sb));max-width:calc(100vw - 112px);z-index:3}
 #sitPanel .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 #sitPanel button{height:40px;padding:0 15px;border-radius:20px;border:1px solid rgba(60,55,48,.28);background:var(--paper);font:inherit;font-size:14px;letter-spacing:.08em;color:var(--ink);cursor:pointer;box-shadow:0 2px 8px rgba(40,35,30,.1)}
 #sitPanel .lbl{font-size:13px;color:var(--sumi);letter-spacing:.2em;background:var(--paper);padding:5px 10px;border-radius:12px;margin-right:2px}
 #sitInfo{font-size:15px;letter-spacing:.15em;color:#3a352f;background:var(--paper);padding:8px 14px;border-radius:20px}
 #sitInfo:empty{display:none}
-#breathDot{position:fixed;left:50%;bottom:34px;width:64px;height:64px;margin-left:0;border-radius:50%;background:radial-gradient(circle,rgba(255,226,170,.95) 0%,rgba(255,200,120,.5) 45%,rgba(255,190,110,0) 72%);transform:translateX(-50%) scale(.6);opacity:0;pointer-events:none;transition:opacity .6s}
+#breathDot{position:fixed;left:50%;bottom:calc(34px + var(--sb));width:64px;height:64px;margin-left:0;border-radius:50%;background:radial-gradient(circle,rgba(255,226,170,.95) 0%,rgba(255,200,120,.5) 45%,rgba(255,190,110,0) 72%);transform:translateX(-50%) scale(.6);opacity:0;pointer-events:none;transition:opacity .6s}
 #breathDot:not(.show){opacity:0!important}
 #listenOverlay{position:fixed;inset:0;background:rgba(22,20,17,.62);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;opacity:0;pointer-events:none;transition:opacity 1.2s;z-index:6;padding:0 28px;text-align:center}
 #listenOverlay.show{opacity:1;pointer-events:auto}
@@ -77,9 +80,10 @@ body.bowling #hint,body.photo #hint,body.gazing #hint{display:none}
 #listenBack{font:inherit;font-size:14px;letter-spacing:.2em;padding:9px 22px;border-radius:20px;border:1px solid rgba(241,236,225,.4);background:transparent;color:#f1ece1;cursor:pointer}
 body.night #poem{color:#efe9dc;text-shadow:0 0 10px rgba(0,0,0,.85),0 0 3px rgba(0,0,0,.9)}
 body.night #title span{color:#d8d2c5;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-#visitNote{position:fixed;top:56px;right:16px;font-size:12px;letter-spacing:.2em;color:rgba(60,55,48,.55);pointer-events:none;text-shadow:0 0 4px rgba(255,255,255,.8)}
+#visitNote:not(:empty){background:rgba(247,243,234,.72);padding:3px 10px;border-radius:12px;color:#5f574d!important;text-shadow:none!important}
+#visitNote{position:fixed;top:calc(56px + var(--st));right:calc(16px + var(--sr));font-size:12px;letter-spacing:.2em;color:rgba(60,55,48,.55);pointer-events:none;text-shadow:0 0 4px rgba(255,255,255,.8)}
 body.night #visitNote{color:rgba(230,225,214,.6);text-shadow:none}
-#editBar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);width:min(560px,calc(100vw - 20px));display:flex;flex-direction:column;gap:8px;background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:14px;padding:10px;box-shadow:0 6px 24px rgba(40,35,30,.16);z-index:4}
+#editBar{position:fixed;left:50%;bottom:calc(16px + var(--sb));transform:translateX(-50%);width:min(560px,calc(100vw - 20px));display:flex;flex-direction:column;gap:8px;background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:14px;padding:10px;box-shadow:0 6px 24px rgba(40,35,30,.16);z-index:4}
 #editBar .row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
 #editBar button{height:36px;padding:0 12px;border-radius:18px;border:1px solid rgba(60,55,48,.25);background:#fff;font:inherit;font-size:13px;color:var(--ink);cursor:pointer}
 #editBar button:disabled{opacity:.35}
@@ -93,12 +97,12 @@ body.editing #editBar{display:flex!important}
 .mbtns{display:flex;gap:10px;justify-content:center;margin-top:18px}
 .mbtns button{font:inherit;font-size:14px;letter-spacing:.2em;padding:8px 20px;border-radius:18px;border:1px solid rgba(60,55,48,.3);background:#fff;cursor:pointer}
 #leafOk{background:#3c3731;color:#f3ede0;border-color:#3c3731}
-#askCard{position:fixed;left:50%;bottom:120px;transform:translateX(-50%) translateY(10px);width:min(340px,84vw);background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:8px;padding:16px 18px 14px;text-align:center;box-shadow:0 8px 28px rgba(40,35,30,.18);opacity:0;pointer-events:none;transition:opacity .8s,transform .8s;z-index:4}
+#askCard{position:fixed;left:50%;bottom:calc(120px + var(--sb));transform:translateX(-50%) translateY(10px);width:min(340px,84vw);background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:8px;padding:16px 18px 14px;text-align:center;box-shadow:0 8px 28px rgba(40,35,30,.18);opacity:0;pointer-events:none;transition:opacity .8s,transform .8s;z-index:4}
 #askCard.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
 #askCard small{display:block;font-size:11px;letter-spacing:.3em;color:#8a8175;margin-bottom:8px}
 #askCard p{margin:0 0 12px;font-size:17px;line-height:1.8;letter-spacing:.08em;color:var(--ink)}
 #askOk{font:inherit;font-size:13px;letter-spacing:.3em;padding:6px 18px;border-radius:16px;border:1px solid rgba(60,55,48,.3);background:transparent;cursor:pointer;color:var(--sumi)}
-#soundPanel{position:fixed;top:56px;right:14px;width:240px;background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:10px;padding:12px 14px;box-shadow:0 8px 26px rgba(40,35,30,.18);z-index:7;display:flex;flex-direction:column;gap:10px}
+#soundPanel{position:fixed;top:calc(56px + var(--st));right:calc(14px + var(--sr));width:240px;background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:10px;padding:12px 14px;box-shadow:0 8px 26px rgba(40,35,30,.18);z-index:7;display:flex;flex-direction:column;gap:10px}
 #soundPanel.hidden{display:none}
 .sp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;letter-spacing:.15em;color:var(--sumi)}
 .sp-row input[type=range]{flex:1;accent-color:#5a5248}
@@ -112,12 +116,12 @@ body.editing #editBar{display:flex!important}
 #sleepOverlay small{font-size:12px;letter-spacing:.25em;color:#5c564d}
 #visitNote{transition:opacity .3s}
 body:has(#soundPanel:not(.hidden)) #visitNote{opacity:0}
-#bookBtn{position:fixed;top:12px;right:102px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:15px;color:var(--sumi);cursor:pointer;padding:0}
+#bookBtn{position:fixed;top:calc(12px + var(--st));right:calc(102px + var(--sr));width:36px;height:36px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:15px;color:var(--sumi);cursor:pointer;padding:0}
 #bookDot{position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--shu);display:none}
 #bookDot.on{display:block}
 #teaHint{position:fixed;left:50%;top:22%;transform:translateX(-50%);padding:9px 18px;border-radius:20px;background:rgba(247,243,234,.88);font-size:14px;letter-spacing:.12em;color:var(--sumi);opacity:0;transition:opacity .8s;pointer-events:none;white-space:nowrap;max-width:90vw}
 #teaHint.show{opacity:1}
-#teaDrink{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);font:inherit;font-size:16px;letter-spacing:.3em;padding:12px 28px 12px 32px;border-radius:24px;border:none;background:#3c3731;color:#f3ede0;cursor:pointer;z-index:4}
+#teaDrink{position:fixed;left:50%;bottom:calc(40px + var(--sb));transform:translateX(-50%);font:inherit;font-size:16px;letter-spacing:.3em;padding:12px 28px 12px 32px;border-radius:24px;border:none;background:#3c3731;color:#f3ede0;cursor:pointer;z-index:4}
 #kujiCard{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(30,27,23,.4);opacity:0;pointer-events:none;transition:opacity .6s;z-index:8}
 #kujiCard.show{opacity:1;pointer-events:auto}
 #kujiCard .slip{position:relative;width:118px;min-height:300px;background:#fbf8f0;border:1px solid rgba(60,55,48,.25);box-shadow:0 10px 30px rgba(0,0,0,.25);padding:46px 0 22px;display:flex;flex-direction:column;align-items:center;transform:translateY(16px);transition:transform .8s}
@@ -127,6 +131,9 @@ body:has(#soundPanel:not(.hidden)) #visitNote{opacity:0}
 #kujiDate{margin-top:auto;font-size:10px;color:#9a9083;letter-spacing:.1em}
 #kujiNote{color:#f3ede0;font-size:12px;letter-spacing:.15em;min-height:1em}
 #kujiOk{font:inherit;font-size:14px;letter-spacing:.3em;padding:8px 24px;border-radius:18px;border:1px solid rgba(243,237,224,.5);background:rgba(30,27,23,.5);color:#f3ede0;cursor:pointer}
+#bookBak{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px 0 10px;padding-top:10px;border-top:1px dashed rgba(60,55,48,.2)}
+#bookBak button{font:inherit;font-size:13px;letter-spacing:.1em;padding:6px 14px;border-radius:16px;border:1px solid rgba(60,55,48,.25);background:rgba(255,255,255,.6);color:var(--ink);cursor:pointer}
+#bookBak small{flex-basis:100%;font-size:11.5px;line-height:1.7;color:#8a8073;letter-spacing:.04em}
 #book{position:fixed;inset:0;display:grid;place-items:center;background:rgba(30,27,23,.42);z-index:9}
 .bookcard{width:min(360px,88vw);max-height:80vh;overflow:auto;background:#fbf8f0 repeating-linear-gradient(transparent 0 33px,rgba(120,105,85,.13) 33px 34px);border-radius:4px;padding:24px 24px 18px;box-shadow:0 14px 40px rgba(0,0,0,.25);border-left:6px solid #6e5038}
 .bookcard h2{margin:0 0 6px;font-weight:600;font-size:19px;letter-spacing:.4em}
@@ -142,7 +149,7 @@ body.photo #toast,body.gazing #toast{bottom:96px}
 #qBtns button{font:inherit;font-size:12px;padding:4px 9px;border-radius:12px;border:1px solid rgba(60,55,48,.28);background:#fff;color:var(--sumi);cursor:pointer;letter-spacing:.05em}
 #qBtns button.on{background:#3c3731;color:#f3ede0;border-color:#3c3731}
 #fade.msg{display:grid;place-items:center;font-size:15px;letter-spacing:.3em;color:var(--sumi)}
-#perfTip{position:fixed;left:50%;top:110px;transform:translateX(-50%);width:min(320px,86vw);background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:10px;padding:14px 16px;box-shadow:0 8px 26px rgba(40,35,30,.18);z-index:9;display:none;text-align:center}
+#perfTip{position:fixed;left:50%;top:calc(110px + var(--st));transform:translateX(-50%);width:min(320px,86vw);background:var(--paper);border:1px solid rgba(60,55,48,.2);border-radius:10px;padding:14px 16px;box-shadow:0 8px 26px rgba(40,35,30,.18);z-index:9;display:none;text-align:center}
 #perfTip.show{display:block}
 #perfTip p{margin:0 0 10px;font-size:14px;line-height:1.7;color:var(--ink)}
 #perfTip div{display:flex;gap:8px;justify-content:center}
@@ -155,11 +162,17 @@ body.photo #toast,body.gazing #toast{bottom:96px}
 @media (max-width:420px){#lineBox{gap:10px}#lineBox a{font-size:12px;padding:6px 10px}#lineBox span{font-size:11.5px}}
 #lineBox .lineQr{background:#fbf8f1;padding:5px;border-radius:6px;border:1px solid rgba(60,55,48,.15);line-height:0}
 @media (hover:none){#lineBox .lineQr{display:none}}
+#ver{white-space:nowrap}
 #credits{font-size:10px;color:#9a9083;margin:12px 0 0;line-height:1.6;letter-spacing:.03em}
-#zoomBar{position:fixed;left:16px;top:42%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:3}
+#zoomBar{position:fixed;left:calc(16px + var(--sl));top:42%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:3}
 #zoomBar button{width:40px;height:40px;border-radius:50%;border:1px solid rgba(60,55,48,.25);background:var(--paper);font:inherit;font-size:18px;color:var(--sumi);cursor:pointer;padding:0;box-shadow:0 2px 8px rgba(40,35,30,.1)}
-#gazeBar{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);display:none;z-index:4}
+#gazeBar{position:fixed;left:50%;bottom:calc(34px + var(--sb));transform:translateX(-50%);display:none;z-index:4}
 #gazeBar button{font:inherit;font-size:15px;letter-spacing:.3em;padding:10px 26px 10px 32px;border-radius:22px;border:1px solid rgba(60,55,48,.25);background:var(--paper);color:var(--ink);cursor:pointer;box-shadow:0 3px 10px rgba(40,35,30,.15)}
+.skylab{position:fixed;transform:translate(-50%,-190%);font-size:12.5px;letter-spacing:.3em;padding-left:.3em;color:rgba(238,234,222,.82);text-shadow:0 0 6px rgba(0,0,0,.8);pointer-events:none;transition:opacity .8s;white-space:nowrap;z-index:3}
+.skylab::after{content:"";position:absolute;left:50%;top:150%;width:1px;height:12px;background:rgba(238,234,222,.35)}
+#skyLine{position:fixed;left:50%;bottom:calc(96px + var(--sb));transform:translateX(-50%);max-width:86vw;text-align:center;font-size:14px;line-height:1.8;letter-spacing:.12em;color:rgba(244,240,230,.92);text-shadow:0 0 10px rgba(0,0,0,.85);opacity:0;transition:opacity 1.4s;pointer-events:none;z-index:4}
+#skyLine.show{opacity:1}
+body:not(.gazing) #skyLabels,body:not(.gazing) #skyLine{display:none}
 #gazeHint{position:fixed;left:50%;top:22%;transform:translateX(-50%);padding:9px 18px;border-radius:20px;background:rgba(247,243,234,.85);font-size:13px;letter-spacing:.1em;color:var(--sumi);opacity:0;transition:opacity 1s;pointer-events:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
 #gazeHint.show{opacity:1}
 body.gazing #gazeBar{display:block}
@@ -168,6 +181,12 @@ body.editing #zoomBar{display:none}
 #moodBtn{border-style:dotted!important}
 #moodPick{position:fixed;inset:0;display:grid;place-items:center;background:rgba(30,27,23,.35);z-index:12}
 #moodPick .mt{font-size:17px;letter-spacing:.15em;margin-bottom:16px;color:var(--ink)}
+#stayStep{display:none}
+#moodPick.stay .moods,#moodPick.stay>.mcard>.mt,#moodPick.stay>.mcard>.mnote,#moodPick.stay>.mcard>.mbtns{display:none}
+#moodPick.stay #stayStep{display:block;animation:stayIn 1s ease}
+@keyframes stayIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.stays{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:2px 0 12px}
+.stays button{font:inherit;font-size:14px;letter-spacing:.1em;padding:12px 6px;border-radius:12px;border:1px solid rgba(60,55,48,.22);background:rgba(255,255,255,.55);color:var(--ink);cursor:pointer}
 .moods{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
 .moods button{width:52px;height:52px;border-radius:50%;border:1px solid rgba(60,55,48,.28);background:#fff;font:inherit;font-size:19px;color:var(--ink);cursor:pointer}
 .moods button.on{background:#3c3731;color:#f3ede0}
@@ -187,7 +206,7 @@ body.editing #zoomBar{display:none}
 #bookList li.note small{display:block;font-size:11px;color:#9a9083}
 #bookList li.empty{height:auto;font-size:13px;color:#9a9083;line-height:1.8;padding:6px 0}
 #bookYear{display:flex;justify-content:center;margin:0 0 14px}
-#photoBar{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);display:none;gap:8px;z-index:6;flex-wrap:wrap;justify-content:center;width:max-content;max-width:94vw}
+#photoBar{position:fixed;left:50%;bottom:calc(26px + var(--sb));transform:translateX(-50%);display:none;gap:8px;z-index:6;flex-wrap:wrap;justify-content:center;width:max-content;max-width:94vw}
 #photoBar button{font:inherit;font-size:14px;letter-spacing:.15em;padding:9px 16px;border-radius:20px;border:1px solid rgba(60,55,48,.25);background:var(--paper);cursor:pointer;color:var(--ink)}
 #photoBar button.on{border-color:var(--shu);color:var(--shu)}
 #phShot{background:#3c3731!important;color:#f3ede0!important}
@@ -205,7 +224,7 @@ body.photo #actions,body.photo #joy,body.photo #sitPanel,body.photo #seasons,bod
 #codeText{width:100%;font-family:ui-monospace,monospace;font-size:13px;padding:8px;border:1px solid rgba(60,55,48,.25);border-radius:6px;background:#fff;resize:none;word-break:break-all}
 #codeNote{display:block;min-height:1.4em;font-size:12px;color:#857b6e;margin-top:6px}
 #codeTitle{font-size:14px;line-height:1.7;letter-spacing:.06em}
-#bowlBar{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);display:none;gap:8px;z-index:6;flex-wrap:wrap;justify-content:center;width:max-content;max-width:94vw}
+#bowlBar{position:fixed;left:50%;bottom:calc(26px + var(--sb));transform:translateX(-50%);display:none;gap:8px;z-index:6;flex-wrap:wrap;justify-content:center;width:max-content;max-width:94vw}
 #bowlBar button{font:inherit;font-size:14px;letter-spacing:.12em;padding:9px 15px;border-radius:20px;border:1px solid rgba(60,55,48,.25);background:var(--paper);cursor:pointer;color:var(--ink)}
 #bowlBar button.on{background:#3c3731;color:#f3ede0;border-color:#3c3731}
 #bowlHint{position:fixed;left:50%;top:18%;transform:translateX(-50%);padding:9px 18px;border-radius:20px;background:rgba(247,243,234,.88);font-size:14px;letter-spacing:.1em;color:var(--sumi);opacity:0;transition:opacity .9s;pointer-events:none;max-width:90vw;text-align:center;z-index:5}
@@ -218,10 +237,22 @@ body.photo #actions,body.photo #joy,body.photo #sitPanel,body.photo #seasons,bod
 #bowlLine{display:block;font-size:13px;line-height:1.8;color:#6e655a;letter-spacing:.08em}
 body.bowling #bowlBar{display:flex}
 body.bowling #actions,body.bowling #joy,body.bowling #sitPanel,body.bowling #seasons,body.bowling #title,body.bowling #visitNote,body.bowling #poem,body.bowling #zoomBar,body.bowling #toast{display:none!important}
+@media (orientation:landscape) and (max-height:560px){
+  #actions{gap:8px;flex-wrap:wrap-reverse;max-height:calc(100vh - 96px - var(--st) - var(--sb));align-content:flex-end;column-gap:10px;bottom:calc(12px + var(--sb))}
+  .btn{width:52px;height:52px;font-size:13px}
+  .btn.ctx,#rakeBtn{width:60px;height:60px;font-size:14px}
+  #zoomBar{top:56%}
+  #hint{top:calc(96px + var(--st))}
+  #visitNote{display:none}
+}
 #fade{position:fixed;inset:0;background:#f4f2ec;opacity:0;pointer-events:none;transition:opacity .35s;z-index:5}
 #fade.on{opacity:1}
 #loading{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:#ebe6da;transition:opacity .9s}
 #loading.done{opacity:0;pointer-events:none}
+#ldSub{max-width:300px;text-align:center;font-size:12.5px;line-height:1.8;color:#7a7064;letter-spacing:.06em;min-height:0}
+#ldBtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+#ldBtns button{font:inherit;font-size:14px;letter-spacing:.12em;padding:9px 18px;border-radius:20px;border:1px solid rgba(60,55,48,.28);background:rgba(255,255,255,.65);color:var(--ink);cursor:pointer}
+#ldBtns button.main{background:#3c3731;color:#f3ede0;border-color:#3c3731}
 #ldCanvas{width:240px;height:240px}
 #ldText{margin:0;font-size:14px;letter-spacing:.3em;color:var(--sumi);transition:opacity .6s;min-height:1.6em}
 </style>
@@ -245,7 +276,7 @@ body.bowling #actions,body.bowling #joy,body.bowling #sitPanel,body.bowling #sea
 <div id="fade"></div>
 <div id="teaHint"></div><button id="teaDrink" class="hidden">喝一口</button>
 <div id="kujiCard"><div class="slip"><span class="stamp">一言</span><p id="kujiText"></p><small id="kujiDate"></small></div><small id="kujiNote"></small><button id="kujiOk">收下</button></div>
-<div id="book" class="hidden"><div class="bookcard"><h2>庭院手帖</h2><div id="bookTabs"><button data-t="met" class="on">遇見</button><button data-t="mood">心情</button><button data-t="notes">短句</button><button data-t="year">一年</button></div><p id="bookStats"></p><ul id="bookList"></ul><div id="bookYear" style="display:none"><canvas id="yearCanvas"></canvas></div><button id="bookClose">闔上</button></div></div>
+<div id="book" class="hidden"><div class="bookcard"><h2>庭院手帖</h2><div id="bookTabs"><button data-t="met" class="on">遇見</button><button data-t="mood">心情</button><button data-t="notes">短句</button><button data-t="year">一年</button></div><p id="bookStats"></p><ul id="bookList"></ul><div id="bookYear" style="display:none"><canvas id="yearCanvas"></canvas></div><div id="bookBak"><button id="bakSave">備份手帖</button><button id="bakLoad">還原手帖</button><small>手帖只存在這台裝置的瀏覽器裡。換手機、清除瀏覽資料，或很久沒來，紀錄可能會不見，記得偶爾備份。</small></div><button id="bookClose">闔上</button></div></div>
 <div id="leafModal" class="hidden"><div class="mcard"><p id="leafModalTitle">在葉子上寫一個詞</p><input id="leafInput" maxlength="10" placeholder="一個詞就好" autocomplete="off"><div class="mbtns"><button id="leafCancel">算了</button><button id="leafOk">放下</button></div><label id="keepRow"><input type="checkbox" id="keepChk"> 也收進手帖</label></div></div>
 <div id="askCard"><small>帶著走的一個問題</small><p id="askText"></p><div class="askb"><button id="askWrite">寫下來</button><button id="askOk">好</button></div></div>
 <div id="visitNote"></div>
@@ -273,13 +304,14 @@ body.bowling #actions,body.bowling #joy,body.bowling #sitPanel,body.bowling #sea
 <div id="bowlBar"><button data-bm="free" class="on">自由彈</button><button data-bm="listen">聽到消失</button><button data-bm="breath">跟著呼吸</button><button id="bowlExit">離開</button></div>
 <div id="bowlHint"></div><div id="bowlBreath"></div>
 <div id="bowlCard" class="hidden"><p id="bowlSecs"></p><small id="bowlLine"></small><div class="mbtns"><button id="bowlAgain">再一次</button><button id="bowlOk">好</button></div></div>
-<div id="moodPick" class="hidden"><div class="mcard"><p class="mt">今天的心情，像什麼天氣？</p><div class="moods"><button data-m="sun"><b>晴</b></button><button data-m="cloud"><b>雲</b></button><button data-m="rain"><b>雨</b></button><button data-m="fog"><b>霧</b></button><button data-m="snow"><b>雪</b></button></div><small class="mnote">不用想太多，選一個最接近的就好。</small><div class="mbtns"><button id="moodClear">不改變天氣</button><button id="moodSkip">先不選</button></div></div></div>
+<div id="moodPick" class="hidden"><div class="mcard"><p class="mt">今天的心情，像什麼天氣？</p><div class="moods"><button data-m="sun"><b>晴</b></button><button data-m="cloud"><b>雲</b></button><button data-m="rain"><b>雨</b></button><button data-m="fog"><b>霧</b></button><button data-m="snow"><b>雪</b></button></div><small class="mnote">不用想太多，選一個最接近的就好。</small><div class="mbtns"><button id="moodClear">不改變天氣</button><button id="moodSkip">先不選</button></div><div id="stayStep"><p class="mt">今天，想怎麼待一會兒？</p><div class="stays"><button data-st="walk">自己走走</button><button data-st="quiet">安靜一分鐘</button><button data-st="bowl">聽一聲缽</button><button data-st="word">留下一句話</button></div><small class="mnote">選一個就好，也可以直接走進去。</small><div class="mbtns"><button data-st="skip">直接走進去</button></div></div></div></div>
 <div id="photoBar"><button id="phCaption">寫一句</button><button id="phSeal" class="on">落款</button><button id="phShot">拍下來</button><button id="phExit">離開</button></div>
 <div id="phCap"></div><div id="phStamp"><b>庭</b><small></small></div>
 <div id="phResult" class="hidden"><div class="phbox"><img id="phImg" alt="庭院照片"><p>手機：長按圖片儲存　電腦：在圖片上按右鍵另存</p><div class="mbtns"><button id="phDownload">下載</button><button id="phClose">好</button></div></div></div>
-<div id="codeModal" class="hidden"><div class="mcard"><p id="codeTitle"></p><textarea id="codeText" rows="3"></textarea><small id="codeNote"></small><div class="mbtns"><button id="codeCancel">關閉</button><button id="codeOk">複製</button></div></div></div>
+<div id="codeModal" class="hidden"><div class="mcard"><p id="codeTitle"></p><textarea id="codeText" rows="3"></textarea><small id="codeNote"></small><div class="mbtns"><button id="codeCancel">關閉</button><button id="codeFile" class="hidden">存成檔案</button><button id="codeOk">複製</button></div><input id="codeFileIn" type="file" accept=".txt,text/plain" hidden></div></div>
 <div id="zoomBar"><button id="zoomIn" aria-label="拉近">＋</button><button id="zoomOut" aria-label="拉遠">－</button></div>
 <div id="gazeBar"><button id="gazeBack">回來</button></div>
+<div id="skyLabels"></div><div id="skyLine"></div>
 <div id="gazeHint">抬頭看看天空・拖曳看四周，雙指或＋－可以拉近</div>
 <div id="perfTip"><p>畫面好像有點卡，要換成比較省電的畫質嗎？</p><div><button id="perfNo">不用</button><button id="perfYes">換</button></div></div>
 <div id="poem"></div>
@@ -295,11 +327,11 @@ body.bowling #actions,body.bowling #joy,body.bowling #sitPanel,body.bowling #sea
       <div class="lineTxt"><span>如果這座小庭陪了你一會兒，<br>歡迎來 LINE 打聲招呼。</span><a href="https://line.me/R/ti/p/%40458ipuws" target="_blank" rel="noopener">加入 LINE　@458ipuws</a></div>
       <div class="lineQr"><svg width="72" height="72" aria-hidden="true" version="1.1" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><path fill="#3a352f" d="M1,1H2V2H1zM2,1H3V2H2zM3,1H4V2H3zM4,1H5V2H4zM5,1H6V2H5zM6,1H7V2H6zM7,1H8V2H7zM9,1H10V2H9zM10,1H11V2H10zM12,1H13V2H12zM18,1H19V2H18zM19,1H20V2H19zM21,1H22V2H21zM23,1H24V2H23zM24,1H25V2H24zM25,1H26V2H25zM26,1H27V2H26zM27,1H28V2H27zM28,1H29V2H28zM29,1H30V2H29zM1,2H2V3H1zM7,2H8V3H7zM10,2H11V3H10zM17,2H18V3H17zM18,2H19V3H18zM20,2H21V3H20zM21,2H22V3H21zM23,2H24V3H23zM29,2H30V3H29zM1,3H2V4H1zM3,3H4V4H3zM4,3H5V4H4zM5,3H6V4H5zM7,3H8V4H7zM10,3H11V4H10zM13,3H14V4H13zM14,3H15V4H14zM16,3H17V4H16zM17,3H18V4H17zM18,3H19V4H18zM19,3H20V4H19zM23,3H24V4H23zM25,3H26V4H25zM26,3H27V4H26zM27,3H28V4H27zM29,3H30V4H29zM1,4H2V5H1zM3,4H4V5H3zM4,4H5V5H4zM5,4H6V5H5zM7,4H8V5H7zM9,4H10V5H9zM10,4H11V5H10zM11,4H12V5H11zM15,4H16V5H15zM16,4H17V5H16zM17,4H18V5H17zM21,4H22V5H21zM23,4H24V5H23zM25,4H26V5H25zM26,4H27V5H26zM27,4H28V5H27zM29,4H30V5H29zM1,5H2V6H1zM3,5H4V6H3zM4,5H5V6H4zM5,5H6V6H5zM7,5H8V6H7zM9,5H10V6H9zM10,5H11V6H10zM13,5H14V6H13zM14,5H15V6H14zM15,5H16V6H15zM17,5H18V6H17zM19,5H20V6H19zM23,5H24V6H23zM25,5H26V6H25zM26,5H27V6H26zM27,5H28V6H27zM29,5H30V6H29zM1,6H2V7H1zM7,6H8V7H7zM9,6H10V7H9zM10,6H11V7H10zM11,6H12V7H11zM13,6H14V7H13zM14,6H15V7H14zM15,6H16V7H15zM16,6H17V7H16zM20,6H21V7H20zM23,6H24V7H23zM29,6H30V7H29zM1,7H2V8H1zM2,7H3V8H2zM3,7H4V8H3zM4,7H5V8H4zM5,7H6V8H5zM6,7H7V8H6zM7,7H8V8H7zM9,7H10V8H9zM11,7H12V8H11zM13,7H14V8H13zM15,7H16V8H15zM17,7H18V8H17zM19,7H20V8H19zM21,7H22V8H21zM23,7H24V8H23zM24,7H25V8H24zM25,7H26V8H25zM26,7H27V8H26zM27,7H28V8H27zM28,7H29V8H28zM29,7H30V8H29zM9,8H10V9H9zM10,8H11V9H10zM13,8H14V9H13zM15,8H16V9H15zM18,8H19V9H18zM19,8H20V9H19zM20,8H21V9H20zM21,8H22V9H21zM1,9H2V10H1zM5,9H6V10H5zM7,9H8V10H7zM8,9H9V10H8zM9,9H10V10H9zM10,9H11V10H10zM14,9H15V10H14zM15,9H16V10H15zM16,9H17V10H16zM18,9H19V10H18zM19,9H20V10H19zM21,9H22V10H21zM22,9H23V10H22zM23,9H24V10H23zM24,9H25V10H24zM25,9H26V10H25zM26,9H27V10H26zM29,9H30V10H29zM3,10H4V11H3zM4,10H5V11H4zM10,10H11V11H10zM11,10H12V11H11zM12,10H13V11H12zM21,10H22V11H21zM23,10H24V11H23zM25,10H26V11H25zM26,10H27V11H26zM27,10H28V11H27zM28,10H29V11H28zM29,10H30V11H29zM7,11H8V12H7zM8,11H9V12H8zM10,11H11V12H10zM11,11H12V12H11zM12,11H13V12H12zM14,11H15V12H14zM15,11H16V12H15zM16,11H17V12H16zM18,11H19V12H18zM19,11H20V12H19zM21,11H22V12H21zM29,11H30V12H29zM2,12H3V13H2zM4,12H5V13H4zM6,12H7V13H6zM8,12H9V13H8zM10,12H11V13H10zM11,12H12V13H11zM14,12H15V13H14zM17,12H18V13H17zM18,12H19V13H18zM22,12H23V13H22zM26,12H27V13H26zM28,12H29V13H28zM29,12H30V13H29zM1,13H2V14H1zM3,13H4V14H3zM4,13H5V14H4zM5,13H6V14H5zM7,13H8V14H7zM8,13H9V14H8zM11,13H12V14H11zM13,13H14V14H13zM14,13H15V14H14zM17,13H18V14H17zM18,13H19V14H18zM19,13H20V14H19zM21,13H22V14H21zM22,13H23V14H22zM28,13H29V14H28zM1,14H2V15H1zM2,14H3V15H2zM3,14H4V15H3zM4,14H5V15H4zM5,14H6V15H5zM9,14H10V15H9zM11,14H12V15H11zM12,14H13V15H12zM14,14H15V15H14zM15,14H16V15H15zM16,14H17V15H16zM17,14H18V15H17zM23,14H24V15H23zM24,14H25V15H24zM25,14H26V15H25zM26,14H27V15H26zM27,14H28V15H27zM28,14H29V15H28zM29,14H30V15H29zM1,15H2V16H1zM3,15H4V16H3zM7,15H8V16H7zM8,15H9V16H8zM10,15H11V16H10zM11,15H12V16H11zM13,15H14V16H13zM16,15H17V16H16zM18,15H19V16H18zM24,15H25V16H24zM25,15H26V16H25zM26,15H27V16H26zM27,15H28V16H27zM29,15H30V16H29zM1,16H2V17H1zM4,16H5V17H4zM5,16H6V17H5zM8,16H9V17H8zM9,16H10V17H9zM11,16H12V17H11zM15,16H16V17H15zM18,16H19V17H18zM21,16H22V17H21zM23,16H24V17H23zM25,16H26V17H25zM28,16H29V17H28zM29,16H30V17H29zM2,17H3V18H2zM6,17H7V18H6zM7,17H8V18H7zM8,17H9V18H8zM14,17H15V18H14zM15,17H16V18H15zM17,17H18V18H17zM18,17H19V18H18zM19,17H20V18H19zM20,17H21V18H20zM22,17H23V18H22zM28,17H29V18H28zM1,18H2V19H1zM3,18H4V19H3zM5,18H6V19H5zM6,18H7V19H6zM11,18H12V19H11zM12,18H13V19H12zM16,18H17V19H16zM17,18H18V19H17zM23,18H24V19H23zM24,18H25V19H24zM25,18H26V19H25zM26,18H27V19H26zM28,18H29V19H28zM29,18H30V19H29zM4,19H5V20H4zM6,19H7V20H6zM7,19H8V20H7zM11,19H12V20H11zM12,19H13V20H12zM14,19H15V20H14zM15,19H16V20H15zM16,19H17V20H16zM18,19H19V20H18zM19,19H20V20H19zM21,19H22V20H21zM23,19H24V20H23zM27,19H28V20H27zM29,19H30V20H29zM3,20H4V21H3zM5,20H6V21H5zM9,20H10V21H9zM14,20H15V21H14zM16,20H17V21H16zM18,20H19V21H18zM20,20H21V21H20zM21,20H22V21H21zM23,20H24V21H23zM24,20H25V21H24zM25,20H26V21H25zM28,20H29V21H28zM29,20H30V21H29zM1,21H2V22H1zM2,21H3V22H2zM3,21H4V22H3zM4,21H5V22H4zM7,21H8V22H7zM8,21H9V22H8zM12,21H13V22H12zM13,21H14V22H13zM14,21H15V22H14zM17,21H18V22H17zM18,21H19V22H18zM19,21H20V22H19zM21,21H22V22H21zM22,21H23V22H22zM23,21H24V22H23zM24,21H25V22H24zM25,21H26V22H25zM26,21H27V22H26zM29,21H30V22H29zM9,22H10V23H9zM10,22H11V23H10zM11,22H12V23H11zM12,22H13V23H12zM14,22H15V23H14zM15,22H16V23H15zM16,22H17V23H16zM17,22H18V23H17zM20,22H21V23H20zM21,22H22V23H21zM25,22H26V23H25zM29,22H30V23H29zM1,23H2V24H1zM2,23H3V24H2zM3,23H4V24H3zM4,23H5V24H4zM5,23H6V24H5zM6,23H7V24H6zM7,23H8V24H7zM9,23H10V24H9zM12,23H13V24H12zM13,23H14V24H13zM16,23H17V24H16zM17,23H18V24H17zM18,23H19V24H18zM19,23H20V24H19zM20,23H21V24H20zM21,23H22V24H21zM23,23H24V24H23zM25,23H26V24H25zM26,23H27V24H26zM27,23H28V24H27zM29,23H30V24H29zM1,24H2V25H1zM7,24H8V25H7zM10,24H11V25H10zM12,24H13V25H12zM13,24H14V25H13zM15,24H16V25H15zM16,24H17V25H16zM17,24H18V25H17zM18,24H19V25H18zM19,24H20V25H19zM21,24H22V25H21zM25,24H26V25H25zM28,24H29V25H28zM1,25H2V26H1zM3,25H4V26H3zM4,25H5V26H4zM5,25H6V26H5zM7,25H8V26H7zM9,25H10V26H9zM11,25H12V26H11zM12,25H13V26H12zM14,25H15V26H14zM15,25H16V26H15zM17,25H18V26H17zM18,25H19V26H18zM19,25H20V26H19zM20,25H21V26H20zM21,25H22V26H21zM22,25H23V26H22zM23,25H24V26H23zM24,25H25V26H24zM25,25H26V26H25zM26,25H27V26H26zM1,26H2V27H1zM3,26H4V27H3zM4,26H5V27H4zM5,26H6V27H5zM7,26H8V27H7zM13,26H14V27H13zM16,26H17V27H16zM17,26H18V27H17zM18,26H19V27H18zM20,26H21V27H20zM29,26H30V27H29zM1,27H2V28H1zM3,27H4V28H3zM4,27H5V28H4zM5,27H6V28H5zM7,27H8V28H7zM10,27H11V28H10zM11,27H12V28H11zM13,27H14V28H13zM16,27H17V28H16zM18,27H19V28H18zM22,27H23V28H22zM26,27H27V28H26zM27,27H28V28H27zM28,27H29V28H28zM29,27H30V28H29zM1,28H2V29H1zM7,28H8V29H7zM12,28H13V29H12zM16,28H17V29H16zM17,28H18V29H17zM18,28H19V29H18zM20,28H21V29H20zM24,28H25V29H24zM26,28H27V29H26zM28,28H29V29H28zM29,28H30V29H29zM1,29H2V30H1zM2,29H3V30H2zM3,29H4V30H3zM4,29H5V30H4zM5,29H6V30H5zM6,29H7V30H6zM7,29H8V30H7zM9,29H10V30H9zM10,29H11V30H10zM11,29H12V30H11zM13,29H14V30H13zM14,29H15V30H14zM15,29H16V30H15zM16,29H17V30H16zM18,29H19V30H18zM21,29H22V30H21zM22,29H23V30H22zM23,29H24V30H23zM24,29H25V30H24zM26,29H27V30H26zM28,29H29V30H28z" id="qr-path" fill="#000000" fill-opacity="1" fill-rule="nonzero" stroke="none"/></svg></div>
     </div>
-    <p id="credits">部分材質取自 three.js 範例素材；草地材質出自 OpenGameArt（CC BY 3.0）</p>
+    <p id="credits"><span id="ver">版本 2026.11.13</span>・部分材質取自 three.js 範例素材；草地材質出自 OpenGameArt（CC BY 3.0）；環境光照取自 pmndrs/assets（CC0）；星表與銀河取自 d3-celestial（BSD）</p>
   </div>
 </div>
-<div id="loading"><canvas id="ldCanvas" width="480" height="480"></canvas><p id="ldText">整理庭院中</p></div>
-<div id="hint"><i>庭</i><span></span></div>
+<div id="loading"><canvas id="ldCanvas" width="480" height="480"></canvas><p id="ldText">整理庭院中</p><small id="ldSub"></small><div id="ldBtns"></div></div>
+<div id="hint"><i>庭</i><span></span><button id="hintX" aria-label="不用提示">×</button></div>
 <script>
 (()=>{ // 等待的時候：一筆一筆耙出沙紋
   const L=document.getElementById('loading'),c=document.getElementById('ldCanvas'),g=c.getContext('2d'),T=document.getElementById('ldText');
@@ -307,7 +339,8 @@ body.bowling #actions,body.bowling #joy,body.bowling #sitPanel,body.bowling #sea
   for(let r=62,k=0;r<215;r+=15,k++) rings.push({r,ph:Math.random()*6,a:0.6+0.25*Math.random()});
   const stone=[];for(let i=0;i<14;i++){const a=i/14*Math.PI*2;stone.push([Math.cos(a)*(40+Math.random()*9),Math.sin(a)*(30+Math.random()*7)-6]);}
   const words=['整理庭院中','耙一道沙紋','把石頭擺正一點','等風停一下','快好了'];let wi=0;
-  setInterval(()=>{if(!document.getElementById('loading'))return;T.style.opacity=0;setTimeout(()=>{wi=Math.min(wi+1,words.length-1);T.textContent=words[wi];T.style.opacity=1;},600);},2200);
+  let failed=false;
+  setInterval(()=>{if(!document.getElementById('loading')||failed)return;T.style.opacity=0;setTimeout(()=>{wi=Math.min(wi+1,words.length-1);T.textContent=words[wi];T.style.opacity=1;},600);},2200);
   function draw(now){
     if(!document.getElementById('loading'))return;
     const CY=rings.length*0.55+0.9+2.8, tr=(now-t0)/1000, t=tr%CY, ga=Math.min(1,(CY-t)/0.9); g.clearRect(0,0,S,S);
@@ -327,9 +360,34 @@ body.bowling #actions,body.bowling #joy,body.bowling #sitPanel,body.bowling #sea
     requestAnimationFrame(draw);
   }
   requestAnimationFrame(draw);
+  // 失敗或太慢時：留在這片沙紋裡，給幾個溫和的選擇
+  const sub=document.getElementById('ldSub'), btns=document.getElementById('ldBtns');
+  function lowQ(){try{const k='karesansui-v1',o=JSON.parse(localStorage.getItem(k)||'{}')||{};o.quality='low';localStorage.setItem(k,JSON.stringify(o));}catch(_){}location.reload();}
+  let ac=null,acT=0;
+  function listen(b){ if(ac){ac.close();ac=null;clearInterval(acT);b.textContent='聽一會兒';return;} b.textContent='安靜下來';
+    ac=new (window.AudioContext||window.webkitAudioContext)(); const sr=ac.sampleRate, buf=ac.createBuffer(1,sr*4,sr), d=buf.getChannelData(0); let l=0; for(let i=0;i<d.length;i++){l=(l+0.02*(Math.random()*2-1))/1.02;d[i]=l*3;}
+    const n=ac.createBufferSource(); n.buffer=buf; n.loop=true; const lp=ac.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=600; const g=ac.createGain(); g.gain.value=0.35; n.connect(lp).connect(g).connect(ac.destination); n.start();
+    const bowl=()=>{const t=ac.currentTime,o=ac.createGain();o.connect(ac.destination);for(const[r,a,dc]of[[1,0.12,9],[1.004,0.09,9],[2.71,0.05,5],[5.15,0.02,2.5]]){const s=ac.createOscillator(),e=ac.createGain();s.frequency.value=196*r;e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(a,t+0.01);e.gain.exponentialRampToValueAtTime(0.0001,t+dc);s.connect(e).connect(o);s.start(t);s.stop(t+dc);}};
+    bowl(); acT=setInterval(bowl,14000); }
+  function show(title,text,list){ if(!document.getElementById('loading'))return; failed=true; T.style.opacity=1; T.textContent=title; sub.textContent=text; btns.innerHTML='';
+    list.forEach(([label,fn,main])=>{const b=document.createElement('button');b.textContent=label;if(main)b.className='main';b.onclick=()=>fn(b);btns.appendChild(b);}); }
+  let failKind='';
+  window.__zgFail=function(kind){
+    if(window.__zgReady&&kind!=='lost')return;
+    if(failKind==='nogl')return; failKind=kind;
+    let L2=document.getElementById('loading');
+    if(!L2){ L2=document.createElement('div'); L2.id='loading'; L2.innerHTML='<p id="ldText"></p><small id="ldSub"></small><div id="ldBtns"></div>'; document.body.appendChild(L2); }
+    if(kind==='nogl') show('這台裝置暫時進不了 3D 庭院','但沙紋還在。可以在這裡聽一會兒，或換一台裝置、換個瀏覽器再來。',[['聽一會兒',listen,true],['重新整理',()=>location.reload()]]);
+    else if(kind==='lost'){ const t=document.getElementById('ldText'),s2=document.getElementById('ldSub'),b2=document.getElementById('ldBtns'); L2.classList.remove('done'); failed=true; t.textContent='畫面需要休息一下'; s2.textContent='可能是裝置太忙了。重新整理就能回到庭院。'; b2.innerHTML='<button class="main" onclick="location.reload()">重新整理</button>'; }
+    else show('庭院好像卡住了','重新整理通常就會好。如果還是不行，可以改用省電畫質。',[['重新整理',()=>location.reload(),true],['用省電畫質再試',lowQ]]);
+  };
+  const tc=document.createElement('canvas'); let gl=null; try{gl=tc.getContext('webgl2')||tc.getContext('webgl');}catch(_){}
+  if(!gl) window.__zgFail('nogl');
+  addEventListener('error',e=>{ if(!window.__zgReady&&e instanceof ErrorEvent&&e.message) window.__zgFail('error'); });
+  setTimeout(()=>{ if(!window.__zgReady&&!failed&&document.getElementById('loading')) show('好像比平常久一點','網路慢的時候，庭院要多整理一下。',[['再等等',()=>{failed=false;btns.innerHTML='';sub.textContent='';T.textContent='快好了';},true],['重新整理',()=>location.reload()],['用省電畫質',lowQ]]); },25000);
 })();
 </script>
 
-<script type="module" src="app.js?v=d6045d0fe766"></script>
+<script type="module" src="app.js?v=c4ac8328eb67"></script>
 </body>
 </html>
